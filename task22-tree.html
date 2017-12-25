@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+.tree_root{
+	width:500px;
+	border:1px solid #FF0;
+    padding:10px;
+    display:flex;
+    flex-direction:row;
+}
+
+
+.tree_root *{
+	padding:10px;
+	margin:5px;
+	display:flex;
+	flex:1;
+	flex-direction:row;
+}
+.child_1{
+	border:1px solid #F00;}
+.child_2{
+	border:1px solid #0F9;}
+	
+.child_3{
+	border:1px solid #00C;}
+
+</style>
+
+
+</head>
+
+
+
+<body>
+
+<div class="tree_root">
+    <div class="child_1">
+        <div class="child_2">
+            <div class="child_3">
+            </div>
+            <div class="child_3">
+            </div>
+        </div>
+        <div class="child_2">
+            <div class="child_3">
+            </div>
+            <div class="child_3">
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <div class="child_1">
+        <div class="child_2">
+            <div class="child_3">
+            </div>
+            <div class="child_3">
+            </div>
+        </div>
+        <div class="child_2">
+            <div class="child_3">
+            </div>
+            <div class="child_3">
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<button onclick="traversal_pre()">前序遍历</button>
+<button onclick="traversal_in()">中序遍历</button>
+<button onclick="traversal_post()">后序遍历</button>
+
+<script>
+//定义一个数组来存放遍历后的顺序
+var root = document.getElementsByClassName("tree_root")[0];
+var divList=[];
+//设一个定时器函数，来延时遍历的效果。
+function traversal_pre(){
+	divList=[];//这里相当于每次点击遍历按钮时，数据清空。
+	reset_color()
+	preorder(root);
+    changeColor();
+	}
+	
+function traversal_in(){
+	divList=[];//这里相当于每次点击遍历按钮时，数据清空。
+	reset_color()
+	inorder(root);
+    changeColor();
+	}	
+	
+function traversal_post(){
+	divList=[];//这里相当于每次点击遍历按钮时，数据清空。
+	reset_color()
+	postorder(root);
+    changeColor();
+	}	
+	
+	
+function changeColor() {
+	var i = 0;
+	divList[i].style.backgroundColor = 'blue';	
+	timer = setInterval(function () {
+		i++;
+		if (i < divList.length) {
+			divList[i-1].style.backgroundColor = '#fff';
+			divList[i].style.backgroundColor = 'blue';
+		} else {
+			clearInterval(timer);
+			divList[divList.length-1].style.backgroundColor = '#fff';
+		}
+	},500)
+}
+//前序遍历。。先访问根节点，然后访问左子树，访问右子树
+
+//对于遍历 先进后出 像入栈一样
+function preorder(node){
+	
+	//在这种情况下先入栈，会出现再次点击遍历按钮时，将节点再次入栈，也就是说出现了重复入栈的情况。这个怎么解决？？（每次按钮数据清空~~~）
+/*	divList.push(node);	
+	for(var i=0,length = node.children.length;i<length;i++)
+	{
+		preorder(node.children[i]);
+		
+	}*/	
+	
+	//另一种方法：
+	if(!(node == null))
+	{
+		divList.push(node);
+		preorder(node.firstElementChild);
+		preorder(node.lastElementChild);//这种方法当二叉树中只有一个孩子时，会出现两次遍历。。。。
+		}
+
+}
+
+
+
+function inorder(node){
+//中序遍历 先遍历左子树 然后 根节点 然后右子树
+	if(!(node == null))
+	{
+		
+		inorder(node.firstElementChild);
+		divList.push(node);
+		inorder(node.lastElementChild);//这种方法当二叉树中只有一个孩子时，会出现两次遍历。。。。
+		}
+}
+
+function postorder(node){
+//中序遍历 先遍历左子树 然后右子树 然后根节点
+	if(!(node == null))
+	{
+		postorder(node.firstElementChild);
+		postorder(node.lastElementChild);
+		divList.push(node);
+		//这种方法当二叉树中只有一个孩子时，会出现两次遍历。。。。
+		}
+}
+
+
+//问题：如何让自己背景颜色改变 后代背景颜色不受影响  -------
+/*对于设置背景颜色时，为了让背景颜色互不干扰 对每一个节点都设置一个背景颜色，然后当选中某一框时，让其背景颜色改变，其他背景色不变。
+此外，对于下一个框要变化时，先将上个框的颜色值切换回来，然后再对当前框颜色值进行改变*/
+
+function reset_color(){
+	var divs = document.getElementsByTagName('div');
+	for (var i = 0; i < divs.length; i++) {
+		divs[i].style.backgroundColor = '#fff';
+	}
+	
+}
+
+//在这种情况下 对每个div元素都设置了背景色，无论先后顺序，就算后来对其父元素进行颜色背景改变，也不会影响到其子元素。所以看上去子元素并不继承父元素的背景色
+
+//window.onload = function ()
+</script>
+
+</body>
+</html>

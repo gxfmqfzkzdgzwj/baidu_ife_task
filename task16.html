@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+</head>
+
+<body>
+
+<div>
+    <label>城市名称：<input id="aqi-city-input" type="text"></label><br>
+    <label>空气质量指数：<input id="aqi-value-input" type="text"></label><br>
+    <button id="add-btn">确认添加</button>
+  </div>
+  <table id="aqi-table">   
+   <!-- <tr>
+      <td>城市</td><td>空气质量</td><td>操作</td>
+    </tr>
+    <tr>
+      <td>北京</td><td>90</td><td><button>删除</button></td>
+    </tr>
+    <tr>
+      <td>北京</td><td>90</td><td><button>删除</button></td>
+    </tr>-->
+   
+  </table>
+
+<script>
+var aqiData = {};
+function addAqiData() {
+    var strCity=document.getElementById("aqi-city-input").value.replace(" ","");
+    var strAqi=document.getElementById("aqi-value-input").value.replace(" ","");
+	/* var strCity = document.getElementById("aqi-city-input").value.trim();
+    var strAqi = document.getElementById("aqi-value-input").value.trim();*/
+	
+	//trim()函数可以去除两端的空格
+	
+	//以下涉及到正则表达式来判断是否含有中英文字符和数字 还没有掌握
+	if (!strCity.match(/^[A-Za-z\u4E00-\u9FA5]+$/)) {
+        alert("城市名必须为中英文字符！");
+        return;
+    }
+    if (!strAqi.match(/^\d+$/)) {
+        alert("空气质量指数必须为整数！");
+        return;
+    }
+	aqiData[strCity] = strAqi;	
+}
+
+/**
+ * 渲染aqi-table表格
+在循环中判断是否有table的子节点，没有的话就添加表头项列表，有的话就只需要将数据项添加进去即可
+ */
+function renderAqiList() {
+	var table=document.getElementById("aqi-table");
+	table.innerHTML = "";
+    for(var strCity in aqiData){
+		if(table.children.length === 0)
+		    table.innerHTML="<tr><td>城市</td><td>空气质量</td><td>操作</td></tr>";
+		var tr=document.createElement("tr");
+		tr.innerHTML="<td>"+strCity+"</td>"+"<td>"+aqiData[strCity]+"</td>"+"<td><button class='del-btn'>删除</button></td>";
+		
+		/*var td1 = document.createElement("td");
+        td1.innerHTML = strCity;
+        tr.appendChild(td1);
+        var td2 = document.createElement("td");
+        td2.innerHTML = aqiData[strCity];
+        tr.appendChild(td2);
+        var td3 = document.createElement("td");
+        td3.innerHTML = "<button class='del-btn'>删除</button>";
+        tr.appendChild(td3);*/
+		//这个也可以
+        table.appendChild(tr);
+			}
+	
+	
+}
+
+/**
+ * 点击add-btn时的处理逻辑
+ * 获取用户输入，更新数据，并进行页面呈现的更新
+ */
+function addBtnHandle() {
+  addAqiData();
+  renderAqiList();
+}
+
+/**
+ * 点击各个删除按钮的时候的处理逻辑
+ * 获取哪个城市数据被删，删除数据，更新表格显示
+ */
+function delBtnHandle(e) {
+  // do sth.
+  
+   var tr = e.parentNode.parentNode;
+   var strCity = tr.children[0].innerHTML;
+   
+   tr.parentNode.removeChild(tr);/*这种移除节点的方法 并未导致数据的改变，数据没有刷新  只是在外观上删除了某一行 运行时间快 但是点击确认添加时 所有数据都回来了*/
+/*   delete aqiData[strCity];
+   renderAqiList();*/
+}
+
+function init() {
+
+  // 在这下面给add-btn绑定一个点击事件，点击时触发addBtnHandle函数
+  var btnAdd = document.getElementById("add-btn");
+  btnAdd.onclick = addBtnHandle;
+  var table = document.getElementById("aqi-table");
+  var arrBtnDel = table.getElementsByClassName("del-btn");
+
+  table.addEventListener("click", function(e) {
+	     var e=e||window.event;
+        var eTarget = e.target || e.srcElement;
+        if (eTarget && eTarget.nodeName === "BUTTON") {
+            delBtnHandle(eTarget);
+        }
+    })
+  // 想办法给aqi-table中的所有删除按钮绑定事件，触发delBtnHandle函数
+}
+
+
+
+init();
+
+</script>
+
+</body>
+</html>

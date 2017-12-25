@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+
+<style>
+div{
+	margin-bottom:20px;}
+input,textarea{
+	margin-right:20px;
+	margin-left:20px;	
+	}
+#tag-output div,#hobby-output div,#hobby-output div:hover{
+	height:100px;
+	width:100px;
+	background-color:#0FF;
+	border-radius:50px;
+	display:inline-block;
+	margin-left:10px;
+	line-height:100px;
+	text-align:center;/*这个当文字超出范围时会出错。。。有待继续改善*/
+	overflow:hidden;
+	}
+	
+#hobby-output div:hover{
+	background-color:#0F0;
+}
+	/*为其增加了鼠标滑过的特效 啦啦啦*/
+	
+	
+
+</style>
+
+</head>
+
+<body>
+
+<div>输入标签:<input id="tag-input" placeholder="HTML CSS" type="text" onKeyUp="keydown()"/></div>
+<div id="tag-output"></div>
+
+
+<div>兴趣爱好:<textarea rows="3" cols="25" placeholder="吃饭 睡觉 打豆豆" id="hobby-input"></textarea><button onclick="hobby()">确认兴趣爱好</button></div>
+
+<div id="hobby-output"></div>
+
+<script>
+
+
+function keydown(){
+	var tag = document.getElementById("tag-input");//这个功能好难啊
+	var tag_output = document.getElementById("tag-output");
+	if (event.keyCode == 32 || event.keyCode == 13 ||event.keyCode == 229 ||event.keyCode == 188) {
+			
+			 var text = document.getElementById("tag-input").value.trim();
+			 text = text.replace(/,/g,"").replace(/，/g,"").replace(/[\r\n]/g,"").replace(/\s+/g,"");
+			 if(text.length!=0)//这里里要增加判断长度，要不然的话，输出空的div
+			 {
+			 var div = document.createElement("div");
+			 div.innerHTML = text;
+			 tag_output.appendChild(div);
+			 document.getElementById("tag-input").value ="";}					
+	}
+}
+
+
+
+    var str = [];
+	var str1 = [];
+	function hobby(){
+        var text = document.getElementById("hobby-input").value.trim();
+         var ulist = document.getElementById("hobby-output");
+/*	     str = text.split(/[^0-9a-zA-Z\u4e00-\u9fa5]+/).filter(function(e)
+		 {if(e.length>0 && e!= null)  return true; 
+		     else   return false;});*///这里对于正则表达式我不懂
+		 str1=text.split(/,|，|、|\s|\n|\r|\t/);	 
+		 render();
+		/* addDelete(); */   //此处不能添加 要不然会出现删除两个的情况
+		 }
+		 
+		 
+	function render(){
+	    var ulist = document.getElementById("hobby-output");
+		<!--先去重 在判断剩余的有没有10个-->
+		
+		for(var i=0;i<str1.length;i++)
+		{
+			if(str.indexOf(str1[i])==-1)
+			     str.push(str1[i]);
+	
+		}//此处即为去重处理
+		
+		
+		if(str.length>10){
+			str = str.slice(0,10);  //这儿删除后几个 而不是截取前十个 怎么截取哇
+			
+			/*str = str.slice(str.length-10,str.length);*/
+		}
+	 	ulist.innerHTML = str.map(function(d){					 
+			 return '<div>' + d + '</div>';			 			
+			}).join("");//join函数将数组转换为字符串，中间没有分隔符，要不然输出会包含一个逗号
+			
+			addDelete();
+	   
+	   }
+	   
+	   
+	   	   
+	   
+	   	
+	   /*问题1 如何让子元素节点个数小于10 此处采用截取数组的方式来进行  */
+	   /*问题2 爱好内部不能重复 这个问题还未解决*/ 	
+	   /*为每一个元素添加delete选项*/
+       function addDelete(){
+		var ulist = document.getElementById("hobby-output");
+		var child = ulist.childNodes;
+				
+		for(var i=0;i<child.length;i++)
+		   {		
+		   
+		   //这里的这个闭包形式就要按这么写  否则会出错 第一层函数有参数值 和最后renturn 函数值里的东西相同	   
+		   /*   addEventHandler(child[i],"click", function(value) { return function(){return deleteID(value)}}(i));			*/  
+			//为什么每次点击都只能删除一个  明明给所有的add都添加了删除按钮    
+			//这个在render()刷新里也要有 添加删除按钮的功能，因为每次刷新后，str数组发生改变，每个标签对应的值也都会发生改变 所以要重复刷新时候 重复添加删除按钮。要不然就会只有一次有效
+	
+/*		 addEventHandler(child[i],"click", function(){alert("hello")});	*/	
+
+ 
+	
+           child[i].addEventListener('click',function(event) {
+       event.target.style.display = "none";//这样竟然也可以  问题的关键是还不用刷新~~~神奇了
+ 
+	  });  
+          child[i].addEventListener('mouseover',function(event) {
+       event.target.textContent = '删除：'+event.target.textContent;
+      });
+      child[i].addEventListener('mouseout',function(event) {
+        event.target.textContent = event.target.textContent.replace(/删除：/,'');
+      });	//此处增加.textContent属性
+	  
+	  }
+		 
+		}
+
+		
+	function deleteID(id) {
+            console.log(id);
+            str.splice(id, 1);
+			render();
+           
+
+        }     
+	  function addEventHandler(ele, event, hanlder) {
+　　　　if (ele.addEventListener) {
+　　　　　　ele.addEventListener(event, hanlder, false);
+　　　　} else if (ele.attachEvent) {
+　　　　　　ele.attachEvent("on"+event, hanlder);
+　　　　} else {
+　　　　　　ele["on" + event] = hanlder;
+　　　　}　　}
+
+    
+</script>
+
+
+</body>
+</html>
+<!--还差一个去重的效果-->
+
+<!--问题：为什么不用每次刷新-->

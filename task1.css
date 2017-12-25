@@ -1,0 +1,18 @@
+@charset "utf-8";
+/* CSS Document */
+.all{background-color:#CCC;width:1400px;}
+/*div{background-color:white;}*/
+.logo{
+	background-color:#000;
+	height:50px;
+	width:1400px}
+.guide{
+	float:right;
+	height:100px;		
+	width:900px;
+	}
+.daohang{
+	float:left;
+	margin-right:15px;
+	}
+#huise{color:#666;}
