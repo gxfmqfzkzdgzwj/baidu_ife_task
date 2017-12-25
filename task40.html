@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script src="jquery-3.2.1.min.js"></script>
+</head>
+
+<body>
+<div id = "container"></div>
+
+<script>
+
+	var DatePicker = function(container){
+
+		this.container = container;
+		this.MainElement = null;
+		this.selectedEle = null;
+		this.Date = new Date();	
+		this.init();
+	}
+
+
+
+	DatePicker.prototype = {
+
+//利用对象的形式来写原型。。。。。。。。看一下js的原型
+	days: ['日','一','二','三','四','五','六'],
+
+	init: function(){
+		//创建盒子MainELMENT
+		this.MainElement = $("<div></div>")
+		                  .css('height','400px').css('width','350px')
+		                  .css('border','2px solid lightgray').css('font-family','微软雅黑').appendTo(this.container);
+
+
+		//头部
+		var header = $('<p></p>').css('text-align','center')
+		            .css('padding','5px').css('margin','0px')
+		            .css('background-color', 'red').css('color','white').appendTo(this.MainElement);
+
+       //日期居中
+       var title = $('<strong>').html(2017+'年'+12+'月').addClass('title').appendTo(header);
+
+       var self = this;
+       //左边按钮上个月
+
+       var arrLeft = $('<strong>').html('<-').css('float','left').appendTo(header).click(function(){
+
+       	//为什么不用this  试一下 this和self的区别
+      	 	self.preMonth();
+       });
+
+       var arrRight = $('<strong>').html('->').css('float','right').appendTo(header).click(function(){
+
+       	//为什么不用this  试一下 this和self的区别
+       	 	self.nextMonth();
+       });
+
+       //日历主题部分
+       //星期部分
+
+       //创建元素
+      function creatElement(){
+      	var ele = $('<span>').css('text-align', 'center')
+               	   .css('display', 'inline-block')
+                   .css('width', '50px')
+                   .css('height', '50px')
+                   .css('line-height', '50px');      
+
+         return ele;
+
+      }
+      //周日  一直到周一
+
+       for(var i = 0;i<7;i++){
+
+        var el = creatElement().html(this.days[i]).appendTo(this.MainElement);
+            if (i === 0 || i === 6) {
+                el.css('color', 'rgb(200,17,1)');
+            }
+
+       }
+
+       //所有日期  如何让日期与对应的周对齐排列 如何排列
+       for(var i = 0;i<42;i++)
+       {
+
+         var ele = creatElement().addClass("time")
+                   .css('cursor', 'pointer')
+                   .appendTo(this.MainElement);
+
+       }
+
+
+        this.renderByDate(this.Date);//所有布局在一个函数中进行
+
+
+
+        var self = this;
+
+        //这个有可能有问题  先不管
+        this.MainElement.click(function(e) {
+        	var target = e.target;
+        	    jtarget = $(target);
+
+            if (jtarget.attr("class") === 'time') {
+                var allSpan = $('.time'),
+                    index = allSpan.index($(e.target)),//目前为止都是对的
+                    selectedIndex = allSpan.index(self.selectedEle);
+                var dat = new Date(self.Date);
+                dat.setDate(dat.getDate() + index - selectedIndex);
+                         //   self.selectedEle.css('background-color','').css('color','');
+               
+                 self.selectDate(dat);
+            }
+
+
+        })
+
+	},
+
+
+	preMonth: function(){
+		var dat = new Date(this.Date);
+		dat.setMonth(dat.getMonth() - 1);//将当前月减去一个月
+	//	this.selectedEle.css('background-color','').css('color',' ');   //这里注意不要background-color不能空格 必须为空字符串
+        this.selectDate(dat);//设置被选中日期以及当月的界面
+	},
+
+	nextMonth: function(){
+		var dat = new Date(this.Date);
+		dat.setMonth(dat.getMonth() + 1);//将当前月减去一个月
+		//console.log(dat);
+	//   	this.selectedEle.css('background-color','').css('color',' ');   //这里注意不要background-color不能空格 必须为空字符串
+		
+        this.selectDate(dat);//设置被选中日期以及当月的界面
+	},
+
+	getSelsectedDate: function(){
+		var y = this.Date.getFullYear();
+
+		    m = this.Date.getMonth()+1;
+
+		    d = this.Date.getDate();
+
+		return y + '年' + (m < 10 ? '0' + m : m) + '月' + (d < 10 ? '0' + d : d) + '日';
+	},
+
+
+	selectDate: function(date){		
+		this.selectedEle.css('background-color','').css('color','');   //这里注意不要background-color不能空格 必须为空字符串
+
+		//判断新的日期和当前日期是否在一个月内
+		 if(date.getMonth() == this.Date.getMonth())
+		 {
+		//this.selectEle    如何得到当前span元素  通过index属性来获取 利用日期之间的差值得到当前span索引值 从而得到该元素。
+
+		 	 var allSpan = $('.time'),
+	              oIndex = allSpan.index(this.selectedEle);
+	         var temp = allSpan.get(oIndex + date.getDate() - this.Date.getDate());//获取当前DOM元素
+	         this.selectedEle = $(temp).css('background-color', 'rgb(200,27,1)').css('color', 'white');		
+		 }
+		 else
+		 {
+			this.renderByDate(date);
+		 }
+		this.Date = date;
+
+	},
+
+
+	renderByDate: function(date){
+		//console.log(date);
+	//	console.log(date.getFullYear());
+		 $('.title').html(date.getFullYear() + '年' + ( date.getMonth() + 1) + '月');
+     
+
+		 //先找到第一个日期   如何获得第一个日期
+		 var dat =  new Date(date);
+		 var allSpan = $('.time');
+		 dat.setDate(dat.getDate() - date.getDate() + 1);//为什么要有这一句话
+
+		// console.log(dat);
+		 dat.setDate(dat.getDate() - dat.getDay());
+
+		 for(var i=0;i<42;i++)
+		 {
+		 	  // 获取显示日子的jq对象
+            var ele = $(allSpan.get(i)).html(dat.getDate()); 
+            var content;          
+
+            // 不是同月的色彩变淡
+            if (dat.getMonth() !== new Date(date).getMonth()) {
+                ele.css('color', 'lightgray');
+            } else 
+            {
+                // 周六日字变红
+                if (dat.getDay() === 0 || dat.getDay() === 6) 
+                {
+                    ele.css('color', 'rgb(200,27,1)');
+                } else
+                {
+                    ele.css('color', '');
+                }
+			}
+
+			 // 被选中的日期背景变红
+            if (dat.getTime() === date.getTime()) {
+            //	alert('你好'+dat);   //date是对的	           	
+                  this.selectedEle = ele;                               
+                  this.selectedEle.css('background-color', 'rgb(200,27,1)').css('color', 'white');
+
+            }
+
+
+			dat.setDate(dat.getDate() + 1);
+		}
+
+	//	console.log($(this.selectedEle));
+	}
+
+}
+
+
+	new DatePicker($("#container"));
+
+
+
+//知识点
+
+// $(selector).index()可以得到当前选择器的索引值  获得第一个匹配元素相对于其同胞元素的 index 位置。 从0开始
+// $(selector).get(index) 获得的是DOM元素 如果想要得到jquery元素，前面加上$
+
+
+//问题1 title 处获取不到值  问题2 暂时  
+
+//按钮点击的问题有错误
+
+//检查renderByDate MainElement.click SELECTdate
+//出现问题：1.Date应该大写 我却小写了 2.点击MainElement 背景颜色不对 是因为有两次点击效果  self.selectDate(dat);应放在判断函数内部 要不然导致Date对象undefined
+
+</script>
+
+</body>
+</html>

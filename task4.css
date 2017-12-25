@@ -1,0 +1,39 @@
+@charset "utf-8";
+/* CSS Document */
+.box{
+	margin:0 auto;
+	border:1px solid #666;
+	background-color:#FFF;
+	position:relative;
+	width:800px;
+	height:1000px;
+}
+
+.gray{
+	width:400px;
+	height:200px;
+	background-color:#CCC;
+	position:absolute;
+	margin:0 auto;
+	top:50%;
+	left:50%;
+	margin-top: -100px;
+	margin-left: -200px;
+		
+}
+
+.shan1{ 
+	height:50px;
+	width:50px;
+	background-color:#FC0;
+	border-radius: 0 0 50px 0;	
+	}
+.shan2{ 
+	height:50px;
+	width:50px;
+	background-color:#FC0;
+	border-radius: 50px 0 0 0;
+	position:absolute;
+	right:0px;
+	bottom:0px;
+}

@@ -1,0 +1,151 @@
+@charset "utf-8";
+body{
+	background-color:#CCC;
+	margin: 0;
+	padding:0;
+	width:1300px;
+}
+.logo{
+	background-color:#000;
+	margin-bottom:10px;
+}
+
+.guide{
+	height: 40px;
+	width: 450px;
+	float: right;
+}
+
+.daohang{
+	float: left;
+	margin-right:15px;
+	display:inline;
+	margin-left:0%;
+}
+.daohang a{
+	text-decoration: none;
+	color: white;
+}
+
+.daohang1 a{
+	text-decoration: none;
+	color: gray;
+}
+.lianglie{
+	width:100%;
+}
+
+.fenlan{
+	margin:0px;
+	max-width:64%;
+	float:left;
+}
+.First{
+	margin:20px;
+	background-color:#FFF;
+	padding:8px;
+}
+
+.Second{
+	margin:20px;
+	background-color:#FFF;
+	padding:8px;
+	
+}
+.Third{
+	margin:20px;
+	background-color:#FFF;
+	padding:8px;
+}
+
+.Forth{
+	margin:20px;
+	background-color:#FFF;
+	padding:8px;
+}
+.Fifth{
+	margin-left:0px;
+	margin-right:0px;
+	margin-top:20px;
+	margin-right:20px;
+	background-color:#FFF;
+	padding:8px;
+	border:1px solid #CCC;
+	float:right;
+	
+}
+img{
+	border:2px solid #000;
+	margin:3px;
+}
+
+
+.pic{
+	border: 1px solid gray;
+	width: 100px;
+	height: 100px;
+	padding-left: 1px;
+	padding-bottom: 1px;
+	font-size: 11px;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	
+}
+
+
+
+.biaoge{
+	width:90%;
+	margin:20px;
+	border-collapse: collapse;
+}
+
+td{
+	border:1px solid gray;	
+}
+
+th{
+	background-color: #333;
+	color: white;
+	border:1px solid gray;
+	text-align:left;
+}
+
+.total{
+	font-weight:bold;
+	background-color:#F00;
+	
+}
+.content-left{
+	position:relative;
+	margin-left:5%;
+	width:20%;
+	text-align:right;
+	font-size:15px;
+	float:left;
+}
+.Fifth p{
+	height: 15px;
+}
+.content-right:{
+	margin-top:5px;
+	font-size:15px;
+	text-align:left;
+	width:100%;
+	float:right;
+}
+.word{
+	font-size:10px;
+	color:#999;
+}
+.button{
+	background-color:#039;
+	color: white;
+	width: 100%;
+	height: 30px;
+	font-size: 15px;
+
+}
+/* CSS Document */
+
